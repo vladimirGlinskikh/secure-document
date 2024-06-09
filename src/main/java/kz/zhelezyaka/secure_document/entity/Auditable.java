@@ -7,8 +7,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.NotNull;
+import kz.zhelezyaka.secure_document.domain.RequestContext;
+import kz.zhelezyaka.secure_document.exception.ApiException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +20,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.AlternativeJdkIdGenerator;
 
 import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.*;
 
 @Getter
 @Setter
@@ -43,4 +49,26 @@ public abstract class Auditable {
     @CreatedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void beforePersist() {
+        var userId = RequestContext.getUserId();
+        if (userId == null) {
+            throw new ApiException("Cannot persist entity without user ID in Request Context for this thread");
+        }
+        setCreatedAt(now());
+        setCreatedBy(userId);
+        setUpdatedBy(userId);
+        setUpdatedAt(now());
+    }
+
+    @PreUpdate
+    public void beforeUpdate() {
+        var userId = RequestContext.getUserId();
+        if (userId == null) {
+            throw new ApiException("Cannot update entity without user ID in Request Context for this thread");
+        }
+        setUpdatedAt(now());
+        setUpdatedBy(userId);
+    }
 }
