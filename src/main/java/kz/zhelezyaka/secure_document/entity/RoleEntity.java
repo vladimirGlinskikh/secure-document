@@ -3,6 +3,7 @@ package kz.zhelezyaka.secure_document.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import kz.zhelezyaka.secure_document.enumeration.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,5 +24,5 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @JsonInclude(NON_DEFAULT)
 public class RoleEntity extends Auditable {
     private String name;
-    private String authorities;
+    private Authority authorities;
 }
