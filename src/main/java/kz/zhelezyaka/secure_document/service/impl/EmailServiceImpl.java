@@ -10,6 +10,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import static kz.zhelezyaka.secure_document.utils.EmailUtils.getEmailMessage;
+import static kz.zhelezyaka.secure_document.utils.EmailUtils.getResetPasswordMessage;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
